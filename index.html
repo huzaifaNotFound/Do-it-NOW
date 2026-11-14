@@ -13,7 +13,7 @@
     <title>Do It Now</title>
   </head>
   <body class="bg-paper w-full overflow-x-hidden selection:bg-accent selection:text-card">
-    <div class="app-shell mx-auto flex min-h-svh w-full max-w-5xl flex-col items-center gap-5 px-4 py-4 sm:px-6 sm:py-6 lg:h-svh lg:flex-row lg:items-stretch lg:justify-center lg:gap-14 lg:px-8 lg:pb-10 lg:pt-[12svh]">
+    <div class="app-shell mx-auto flex h-dvh overflow-hidden w-full max-w-5xl flex-col items-center gap-5 px-4 py-4 sm:px-6 sm:py-6 lg:h-svh lg:flex-row lg:items-stretch lg:justify-center lg:gap-14 lg:px-8 lg:pb-10 lg:pt-[12svh]">
       <!-- info box -->
       <section class="info-col flex w-full max-w-md shrink-0 flex-col lg:h-full lg:w-70 lg:max-w-none">
         <div class="w-full">
@@ -45,10 +45,10 @@
       </section>
 
       <!-- main todo sectn --> 
-      <main class="main-col flex w-full max-w-md flex-1 flex-col lg:h-full lg:w-130 lg:max-w-none lg:flex-none">
+      <main class="main-col min-h-0 flex w-full max-w-md flex-1 flex-col lg:h-full lg:w-130 lg:max-w-none lg:flex-none">
         <p class="pb-3 pt-1 font-sans text-[11px] font-semibold uppercase tracking-[0.14em] text-muted select-none lg:pt-0">Tasks</p>
 
-        <div id="todo-container" class="w-full flex-1 min-h-40 lg:min-h-0 overflow-y-auto overflow-x-hidden"></div>
+        <div id="todo-container" class="w-full flex-1 min-h-32 lg:min-h-0 overflow-y-auto overflow-x-hidden"></div>
 
         <!-- add tasks section -->
         <section class="flex h-20 w-full shrink-0 items-center sm:h-22 lg:h-24">

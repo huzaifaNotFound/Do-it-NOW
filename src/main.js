@@ -178,11 +178,11 @@ function todoTemplate(todo) {
 
       <p class="task-text font-sans -ml-1 text-[15px] font-normal text-ink">${escapeHtml(todo.text)}</p>
 
-      <div class="todo-actions ml-auto mr-3 flex items-center gap-1 shrink-0 opacity-0 pointer-events-none transition-opacity duration-200 group-hover:opacity-100 group-hover:pointer-events-auto focus-within:opacity-100 focus-within:pointer-events-auto">
+      <div class="todo-actions ml-auto mr-3 flex items-center gap-2 shrink-0 opacity-0 pointer-events-none transition-opacity duration-200 group-hover:opacity-100 group-hover:pointer-events-auto focus-within:opacity-100 focus-within:pointer-events-auto">
 
         <button
           type="button"
-          class="todo-edit text-muted hover:text-ink hover:scale-110 transition-all duration-200 cursor-pointer p-1"
+          class="todo-edit text-muted hover:text-ink hover:scale-110 transition-all duration-200 cursor-pointer p-1.5 active:scale-90 active:text-ink -m-0.5"
           aria-label="Edit todo"
         >
           <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.85 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"></path></svg>
@@ -190,7 +190,7 @@ function todoTemplate(todo) {
 
         <button
           type="button"
-          class="todo-delete text-muted hover:text-danger hover:scale-110 transition-all duration-200 cursor-pointer p-1"
+          class="todo-delete text-muted hover:text-danger hover:scale-110 transition-all duration-200 cursor-pointer p-1.5 -m-0.5 active:scale-90 active:text-danger"
           aria-label="Delete todo"
         >
           <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M8 6V4h8v2M6 6l1 14h10l1-14"></path></svg>
@@ -265,6 +265,11 @@ btn.addEventListener("click", () => {
   todoContainer.querySelector(".empty-state")?.remove();
 
   todoContainer.insertAdjacentHTML("beforeend", todoTemplate(added));
+  
+  todoContainer.scrollTo({
+  top: todoContainer.scrollHeight,
+  behavior: reduceMotion.matches ? "auto" : "smooth",
+});
 
   input.value = "";
 

@@ -52,7 +52,7 @@
     transform var(--duration-base) var(--ease-bounce);
 }
 
-.todo-row:active {
+.todo-row:has(.todo-delete:active) {
   transform: scale(.985);
 }
 
@@ -256,4 +256,12 @@
     transform: none;
   }
 }
+
+@media(hover:none){
+  .todo-actions{
+    opacity: 1;
+    pointer-events: auto;
+  }
+}
+
 
