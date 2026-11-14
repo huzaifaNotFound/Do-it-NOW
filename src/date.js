@@ -1,4 +1,9 @@
 import "./style.css";
+import {
+  getSelectedDay,
+  pruneOldTodos,
+  setSelectedDay,
+} from "./store.js";
 
 const pad = (n) => String(n).padStart(2, "0");
 
@@ -24,7 +29,7 @@ const daysContainer = document.querySelector("#days");
 const RANGE = 7; 
 
 let today = iso(new Date());
-let selected = today;
+let selected = getSelectedDay();
 
 const pendingTexts = new WeakMap();
 
@@ -142,6 +147,8 @@ function renderDays() {
   }).join("");
 }
 
+let back2Today = document.querySelector("#back2today")
+
 function updateDateCards() {
   daysContainer.querySelectorAll("[data-day]").forEach((card) => {
     const isSelected = card.dataset.day === selected;
@@ -172,7 +179,22 @@ function updateDateCards() {
 
     card.querySelector(".task-dot").classList.toggle("hidden", card.dataset.day !== today);
   });
+  updateBackButton();
 }
+
+function updateBackButton() {
+  if (!back2Today) return;
+  back2Today.classList.toggle("hidden", selected === today);
+}
+
+back2Today?.addEventListener("click", () => {
+  selected = today;
+  setSelectedDay(selected);
+
+  renderHeader();
+  updateDateCards();
+  centerDay(true);
+});
 
 const css = (name, fallback) => {
   const value = parseFloat(getComputedStyle(document.documentElement).getPropertyValue(name));
@@ -235,6 +257,9 @@ function refreshToday() {
 
   if (!daysContainer.querySelector(`[data-day="${selected}"]`)) selected = today;
 
+  setSelectedDay(selected);
+  pruneOldTodos();
+
   updateDateCards();
   renderHeader();
   centerDay(false);
@@ -270,6 +295,7 @@ daysContainer.addEventListener("click", (e) => {
   if (!card) return;
 
   selected = card.dataset.day;
+  setSelectedDay(selected);
 
   renderHeader();
   updateDateCards();

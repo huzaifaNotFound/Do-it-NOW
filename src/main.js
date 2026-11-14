@@ -1,4 +1,11 @@
 import "./style.css";
+import {
+  addTodo as addTodoToStore,
+  getSelectedDay,
+  getTodos,
+  subscribe,
+  toggleTodo as toggleTodoInStore,
+} from "./store.js";
 
 const todoContainer = document.querySelector("#todo-container");
 const btn = document.querySelector("#button");
@@ -40,22 +47,19 @@ function toggleTodo(todo) {
 
   todo.setAttribute("aria-checked", String(completed));
 
-  progressUpdate();
+  toggleTodoInStore(getSelectedDay(), todo.dataset.id);
 }
 
-// todo add handler
-btn.addEventListener("click", () => {
-  const todo = input.value.trim();
+// todo row template
+function todoTemplate(todo) {
+  const completedClass = todo.completed ? " is-completed" : "";
 
-  if (!todo) return;
-
-  const capitalizedTodo = todo.charAt(0).toUpperCase() + todo.slice(1);
-
-  const todoDiv = `
+  return `
     <div
-      class="todo-row animate-enter w-full h-13 rounded-xl bg-card flex items-center mb-2.5 cursor-pointer"
+      data-id="${todo.id}"
+      class="todo-row animate-enter w-full h-13 rounded-xl bg-card flex items-center mb-2.5 cursor-pointer${completedClass}"
       role="checkbox"
-      aria-checked="false"
+      aria-checked="${todo.completed}"
       tabindex="0"
     >
 
@@ -81,14 +85,37 @@ btn.addEventListener("click", () => {
 
       </div>
 
-      <p class="task-text font-sans -ml-1 text-[15px] font-normal text-ink"></p>
+      <p class="task-text font-sans -ml-1 text-[15px] font-normal text-ink">${escapeHtml(todo.text)}</p>
 
     </div>
   `;
+}
 
-  todoContainer.insertAdjacentHTML("beforeend", todoDiv);
+// escape task text
+function escapeHtml(text) {
+  const node = document.createElement("div");
+  node.textContent = text;
+  return node.innerHTML;
+}
 
-  todoContainer.lastElementChild.querySelector(".task-text").textContent = capitalizedTodo;
+// render selected day
+function renderTodos() {
+  todoContainer.innerHTML = getTodos(getSelectedDay()).map(todoTemplate).join("");
+}
+
+// todo add handler
+btn.addEventListener("click", () => {
+  const todo = input.value.trim();
+
+  if (!todo) return;
+
+  const capitalizedTodo = todo.charAt(0).toUpperCase() + todo.slice(1);
+
+  const added = addTodoToStore(getSelectedDay(), capitalizedTodo);
+
+  if (!added) return;
+
+  todoContainer.insertAdjacentHTML("beforeend", todoTemplate(added));
 
   input.value = "";
 
@@ -106,4 +133,11 @@ function progressUpdate() {
   totalTodoCountSpan.textContent = totalTodos;
 }
 
+// store sync
+subscribe((type) => {
+  if (type === "selected" || type === "prune") renderTodos();
+  progressUpdate();
+});
+
+renderTodos();
 progressUpdate();
