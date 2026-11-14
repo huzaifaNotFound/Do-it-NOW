@@ -99,6 +99,24 @@ export function toggleTodo(day, id) {
   emit("todos");
 }
 
+// edit todo
+export function editTodo(day, id, text) {
+  todosByDay[day] = getTodos(day).map((todo) =>
+    todo.id === id ? { ...todo, text } : todo,
+  );
+
+  saveTodos();
+  emit("todos");
+}
+
+// delete todo
+export function removeTodo(day, id) {
+  todosByDay[day] = getTodos(day).filter((todo) => todo.id !== id);
+
+  saveTodos();
+  emit("todos");
+}
+
 export function pruneOldTodos() {
   const today = todayKey();
   let changed = false;
