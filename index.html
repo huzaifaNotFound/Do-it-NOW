@@ -12,16 +12,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Do It Now</title>
   </head>
-  <body class="bg-paper w-full selection:bg-accent selection:text-card">
-    <div class="max-w-5xl w-full h-svh mx-auto flex items-end justify-center">
+  <body class="bg-paper w-full overflow-x-hidden selection:bg-accent selection:text-card">
+    <div class="app-shell mx-auto flex min-h-svh w-full max-w-5xl flex-col items-center gap-5 px-4 py-4 sm:px-6 sm:py-6 lg:h-svh lg:flex-row lg:items-stretch lg:justify-center lg:gap-14 lg:px-8 lg:pb-10 lg:pt-[12svh]">
       <!-- info box -->
-      <section class="w-70 self-start mt-[11svh] flex flex-col mr-16">
-        <div class="flex-3">
-          <h1 id="heading" class="font-display font-extrabold text-[40px] text-ink">Today</h1>
-          <p id="date" class="font-sans font-normal text-[14px] text-muted -mt-1.5">Monday, November 9</p>
+      <section class="info-col flex w-full max-w-md shrink-0 flex-col lg:h-full lg:w-70 lg:max-w-none">
+        <div class="w-full">
+          <h1 id="heading" class="font-display font-extrabold text-[32px] leading-tight text-ink sm:text-[40px]">Today</h1>
+          <p id="date" class="font-sans font-normal text-[13px] text-muted -mt-1 sm:text-[14px]">Monday, November 9</p>
 
           <!-- progress bar --> 
-          <div class="w-full bg-chip rounded-full h-1.5 mt-6 overflow-hidden">
+          <div class="w-full bg-chip rounded-full h-1.5 mt-5 sm:mt-6 overflow-hidden">
             <div
               id="progress"
               class="bg-btn h-1.5 rounded-full"
@@ -29,32 +29,37 @@
             ></div>
           </div>
 
-          <p class="font-sans font-normal text-[14px] text-muted mt-2">
+          <p class="font-sans font-normal text-[13px] text-muted mt-2 sm:text-[14px]">
             <span id="completed-todo-count">0</span> of <span id="total-todo-count">0</span> done
           </p>
         </div>
 
 
         <!-- date cardss -->
-        <div id="days" class="flex-2 w-full mt-3 pt-1 px-28.75 flex justify-between gap-1.5 scrollbar-none overflow-auto"></div>
-        <p id="back2today" class="text-[14px] font-sans font-medium text-accent pt-1.5 mx-auto underline cursor-pointer">Back to Today</p>
+        <div class="date-block relative mt-6 w-full lg:mt-9">
+          <p class="mb-2 font-sans text-[11px] font-semibold uppercase tracking-[0.14em] text-muted select-none">Pick a day</p>
+          <div id="days" class="flex w-full gap-1.5 pt-1 pb-1 overflow-x-auto scrollbar-none"></div>
+          <p id="back2today" class="mx-auto mt-1.5 w-max text-[13px] font-sans font-medium text-accent underline cursor-pointer sm:text-[14px] lg:absolute lg:inset-x-0 lg:top-full lg:mx-auto">Back to Today</p>
+        </div>
       </section>
 
       <!-- main todo sectn --> 
-      <main class="relative w-130 h-8/9 flex flex-col justify-between">
-        <div id="todo-container" class="w-130 flex-1 overflow-y-auto overflow-x-hidden"></div>
+      <main class="main-col flex w-full max-w-md flex-1 flex-col lg:h-full lg:w-130 lg:max-w-none lg:flex-none">
+        <p class="pb-3 pt-1 font-sans text-[11px] font-semibold uppercase tracking-[0.14em] text-muted select-none lg:pt-0">Tasks</p>
+
+        <div id="todo-container" class="w-full flex-1 min-h-40 lg:min-h-0 overflow-y-auto overflow-x-hidden"></div>
 
         <!-- add tasks section -->
-        <section class="w-130 h-25 flex pb-5 items-center">
+        <section class="flex h-20 w-full shrink-0 items-center sm:h-22 lg:h-24">
           <input
             id="input"
             type="text"
             placeholder="Write a task..."
-            class="focus:outline-accent flex-1 rounded-[10px] bg-card p-3 pl-4 h-13 font-sans tracking-wide font-medium text-ink"
+            class="focus:outline-accent flex-1 min-w-0 h-12 rounded-[10px] bg-card p-3 pl-4 font-sans tracking-wide font-medium text-ink sm:h-13"
           />
           <button
             id="button"
-            class="h-13 w-22 font-medium bg-btn hover:brightness-125 active:brightness-90 active:scale-95 rounded-[10px] ml-2 text-card font-sans cursor-pointer transition-all duration-200 ease-bounce focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2"
+            class="h-12 w-20 shrink-0 font-medium bg-btn hover:brightness-125 active:brightness-90 active:scale-95 rounded-[10px] ml-2 text-card font-sans cursor-pointer transition-all duration-200 ease-bounce focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2 sm:h-13 sm:w-22"
           >
             Add
           </button>

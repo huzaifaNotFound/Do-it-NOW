@@ -184,7 +184,7 @@ function updateDateCards() {
 
 function updateBackButton() {
   if (!back2Today) return;
-  back2Today.classList.toggle("hidden", selected === today)
+  back2Today.classList.toggle("invisible", selected === today)
 }
 
 back2Today?.addEventListener("click", () => {

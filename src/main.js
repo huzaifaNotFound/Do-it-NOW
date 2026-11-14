@@ -4,6 +4,7 @@ import {
   editTodo as editTodoInStore,
   getSelectedDay,
   getTodos,
+  iso,
   removeTodo as removeTodoInStore,
   subscribe,
   toggleTodo as toggleTodoInStore,
@@ -26,6 +27,11 @@ input.addEventListener("keydown", (e) => {
 
 // cards enter and click handlers
 todoContainer.addEventListener("click", (e) => {
+  if (e.target.closest(".empty-action")) {
+    input.focus();
+    return;
+  }
+
   const todo = e.target.closest(".todo-row");
 
   if (!todo || !todoContainer.contains(todo)) return;
@@ -120,6 +126,8 @@ function deleteTodo(row) {
   row.remove();
 
   removeTodoInStore(getSelectedDay(), row.dataset.id);
+
+  if (!todoContainer.querySelector(".todo-row")) renderTodos();
 }
 
 // todo row template
@@ -183,6 +191,37 @@ function todoTemplate(todo) {
   `;
 }
 
+// empty state template
+function emptyTemplate() {
+  if (getSelectedDay() < iso(new Date())) {
+    return `
+      <div class="empty-state animate-enter flex w-full flex-col items-center justify-center px-6 text-center">
+        <div class="flex h-12 w-12 items-center justify-center rounded-full bg-chip/70 text-muted">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><path d="M12 8v4l2.5 2"></path></svg>
+        </div>
+        <p class="mt-4 font-display text-[17px] font-bold text-ink">A quiet day</p>
+        <p class="mt-1 max-w-64 font-sans text-[13px] leading-relaxed text-muted">No tasks were logged for this day.</p>
+      </div>
+    `;
+  }
+
+  return `
+    <div class="empty-state animate-enter flex w-full flex-col items-center justify-center px-6 text-center">
+      <div class="flex h-12 w-12 items-center justify-center rounded-full bg-chip/70 text-accent">
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"></path></svg>
+      </div>
+      <p class="mt-4 font-display text-[17px] font-bold text-ink">Nothing planned yet</p>
+      <p class="mt-1 max-w-64 font-sans text-[13px] leading-relaxed text-muted">A clear day is a good place to start. Add one small task below.</p>
+      <button
+        type="button"
+        class="empty-action mt-4 rounded-lg bg-chip px-3.5 py-2 font-sans text-[13px] font-semibold text-ink cursor-pointer transition-all duration-200 ease-bounce hover:bg-accent hover:text-card active:scale-95 focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2"
+      >
+        Add your first task
+      </button>
+    </div>
+  `;
+}
+
 // escape task text
 function escapeHtml(text) {
   const node = document.createElement("div");
@@ -192,7 +231,10 @@ function escapeHtml(text) {
 
 // render selected dayy
 function renderTodos() {
-  todoContainer.innerHTML = getTodos(getSelectedDay()).map(todoTemplate).join("");
+  const todos = getTodos(getSelectedDay());
+
+  todoContainer.innerHTML =
+    todos.length === 0 ? emptyTemplate() : todos.map(todoTemplate).join("");
 }
 
 // todo add handler
@@ -208,6 +250,8 @@ btn.addEventListener("click", () => {
   const added = addTodoToStore(getSelectedDay(), capitalizedTodo);
 
   if (!added) return;
+
+  todoContainer.querySelector(".empty-state")?.remove();
 
   todoContainer.insertAdjacentHTML("beforeend", todoTemplate(added));
 

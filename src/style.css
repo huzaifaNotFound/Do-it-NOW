@@ -103,3 +103,89 @@
 .date-card {
   flex-shrink: 0;
 }
+
+.scrollbar-none {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+
+#todo-container {
+  scrollbar-width: thin;
+  scrollbar-color: transparent transparent;
+}
+
+#todo-container:hover,
+#todo-container:focus-within {
+  scrollbar-color: var(--color-chip) transparent;
+}
+
+#todo-container:has(.empty-state) {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#todo-container::-webkit-scrollbar {
+  width: 6px;
+}
+
+#todo-container::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+#todo-container::-webkit-scrollbar-thumb {
+  background-color: transparent;
+  border-radius: 9999px;
+}
+
+#todo-container:hover::-webkit-scrollbar-thumb,
+#todo-container:focus-within::-webkit-scrollbar-thumb {
+  background-color: var(--color-chip);
+}
+
+#days {
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 14px, #000 calc(100% - 14px), transparent);
+  mask-image: linear-gradient(to right, transparent, #000 14px, #000 calc(100% - 14px), transparent);
+}
+
+/* Short, wide screens (phones in landscape, small windows): keep the app shell
+   side by side instead of stacking and scrolling the page. */
+@media (min-width: 640px) and (max-height: 600px) {
+  .app-shell {
+    flex-direction: row;
+    align-items: stretch;
+    justify-content: center;
+    gap: 2rem;
+    height: 100svh;
+    min-height: 0;
+    padding-top: 1.25rem;
+    padding-bottom: 1.25rem;
+  }
+
+  .info-col {
+    width: 15rem;
+    height: 100%;
+    justify-content: space-between;
+  }
+
+  .date-block {
+    margin-top: 1rem;
+    padding-bottom: 0.875rem;
+  }
+
+  .main-col {
+    flex: 1 1 0%;
+    width: auto;
+    max-width: none;
+    min-width: 0;
+    height: 100%;
+  }
+
+  #todo-container {
+    min-height: 0;
+  }
+}
