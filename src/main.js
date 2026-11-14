@@ -103,6 +103,7 @@ function startEditing(row) {
   const input = document.createElement("input");
   input.type = "text";
   input.value = original;
+  input.maxLength = 20;
   input.className =
     "todo-input flex-1 min-w-0 -ml-1 bg-transparent font-sans text-[15px] font-normal text-ink outline-none border-b border-accent";
   input.setAttribute("aria-label", "Edit todo");
@@ -121,7 +122,7 @@ function startEditing(row) {
     const next = save && value ? value : original;
 
     const text = document.createElement("p");
-    text.className = "task-text font-sans -ml-1 text-[15px] font-normal text-ink";
+    text.className = "task-text font-sans -ml-1 min-w-0 truncate text-[15px] font-normal text-ink";
     text.textContent = next;
 
     input.replaceWith(text);
@@ -190,7 +191,7 @@ function todoTemplate(todo) {
  
       </div>
 
-      <p class="task-text font-sans -ml-1 text-[15px] font-normal text-ink">${escapeHtml(todo.text)}</p>
+      <p class="task-text font-sans -ml-1 min-w-0 truncate text-[15px] font-normal text-ink">${escapeHtml(todo.text)}</p>
 
       <div class="todo-actions ml-auto mr-3 flex items-center gap-2 shrink-0 opacity-0 pointer-events-none transition-opacity duration-200 group-hover:opacity-100 group-hover:pointer-events-auto focus-within:opacity-100 focus-within:pointer-events-auto">
 
@@ -372,7 +373,7 @@ function celebrate() {
 
 //store sync
 subscribe((type) => {
-  if (type === "selected" || type === "prune") {
+  if (type === "selected" || type === "prune" || type === "sync") {
     updateComposer();
     renderTodos();
     resetCelebration();

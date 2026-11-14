@@ -14,7 +14,7 @@
   </head>
   <body class="bg-paper w-full overflow-x-hidden selection:bg-accent selection:text-card">
     <div
-      class="app-shell mx-auto flex h-dvh overflow-hidden w-full max-w-5xl flex-col items-center gap-5 px-4 py-4 sm:px-6 sm:py-6 lg:h-svh lg:flex-row lg:items-stretch lg:justify-center lg:gap-14 lg:px-8 lg:pb-10 lg:pt-[12svh]"
+      class="relative app-shell mx-auto flex h-dvh overflow-hidden w-full max-w-5xl flex-col items-center gap-5 px-4 py-4 sm:px-6 sm:py-6 lg:h-svh lg:flex-row lg:items-stretch lg:justify-center lg:gap-14 lg:px-8 lg:pb-10 lg:pt-[12svh]"
     >
       <!-- info box -->
       <section class="info-col flex w-full max-w-md shrink-0 flex-col lg:h-full lg:w-70 lg:max-w-none">
@@ -78,6 +78,7 @@
           <input
             id="input"
             type="text"
+            maxlength="20"
             placeholder="Write a task..."
             class="focus:outline-accent flex-1 min-w-0 h-12 rounded-[10px] bg-card p-3 pl-4 font-sans tracking-wide font-medium text-ink disabled:bg-chip/50 disabled:text-muted disabled:placeholder:text-muted disabled:cursor-not-allowed sm:h-13"
           />
@@ -89,6 +90,25 @@
           </button>
         </section>
       </main>
+      <!-- footer -->
+      <footer
+        class="shrink-0 text-center font-sans text-[12px] text-muted mb-1 select-none sm:absolute sm:inset-x-0 sm:bottom-1.5"
+      >
+        Made with &#9829; by
+        <a
+          href="https://github.com/huzaifaNotFound/"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="font-medium text-accent underline underline-offset-2 transition-colors duration-200 hover:text-ink focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2 rounded-sm"
+          >M. Huzaifa</a
+        > &#8226; <a
+          href="https://github.com/huzaifaNotFound/todo"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="font-medium text-accent underline underline-offset-2 transition-colors duration-200 hover:text-ink focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2 rounded-sm"
+          >Source</a
+        >
+      </footer>
     </div>
 
     <script type="module" src="/src/main.js"></script>

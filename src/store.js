@@ -80,10 +80,6 @@ export function getTodos(day) {
   return todosByDay[day] ?? [];
 }
 
-export function hasTodos(day) {
-  return getTodos(day).length > 0;
-}
-
 export function addTodo(day, text) {
   if (isPast(day)) return null;
 
@@ -147,3 +143,11 @@ export function pruneOldTodos() {
     emit("prune");
   }
 }
+
+// sync across tabs
+window.addEventListener("storage", (e) => {
+  if (e.key !== STORAGE_KEY && e.key !== null) return;
+
+  todosByDay = loadTodos();
+  emit("sync");
+});
