@@ -12,6 +12,8 @@
   --color-okbg: #e0ebd9; /* Completed task row, border */
 
   --color-danger: #a4483c; /* Delete confirmation */
+  --color-thumb: #CDBBAB;
+
 
   --font-display: "Bricolage Grotesque", "Georgia", serif;
   --font-sans: "Instrument Sans", system-ui, sans-serif;
@@ -34,11 +36,11 @@
   --animate-enter: enter var(--duration-enter) var(--ease-bounce);
 }
 
-/* Date strip slide animation, read from JS (centerDay).
-   Plain :root, NOT @theme: Tailwind v4 drops unused @theme variables. */
 :root {
-  --slide-ms: 450;   /* duration in ms */
-  --slide-power: 3;  /* 2 = gentle, 3 = cubic, 4-5 = snappy start with a long settle */
+  --slide-ms: 450;  
+  --slide-power: 3;  
+  --duration-spark: 1.5s;
+   --ease-spark: cubic-bezier(.22, 1, .36, 1);
 }
 
 .todo-row {
@@ -104,56 +106,52 @@
   flex-shrink: 0;
 }
 
-.scrollbar-none {
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-}
-
-.scrollbar-none::-webkit-scrollbar {
-  display: none;
-}
-
-#todo-container {
-  scrollbar-width: thin;
-  scrollbar-color: transparent transparent;
-}
-
-#todo-container:hover,
-#todo-container:focus-within {
-  scrollbar-color: var(--color-chip) transparent;
-}
-
 #todo-container:has(.empty-state) {
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-#todo-container::-webkit-scrollbar {
-  width: 6px;
+::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
 }
 
-#todo-container::-webkit-scrollbar-track {
+
+::-webkit-scrollbar-track {
   background: transparent;
 }
 
-#todo-container::-webkit-scrollbar-thumb {
-  background-color: transparent;
-  border-radius: 9999px;
+::-webkit-scrollbar-thumb {
+  background-color: var(--color-muted);
+  background-clip: padding-box;
+  border: 2px solid var(--color-paper);
+  border-radius: 999px;
 }
 
-#todo-container:hover::-webkit-scrollbar-thumb,
-#todo-container:focus-within::-webkit-scrollbar-thumb {
-  background-color: var(--color-chip);
+::-webkit-scrollbar-thumb:hover {
+  background-color: var(--color-muted);
+  background-clip: padding-box;
 }
+
+::-webkit-scrollbar-thumb:active {
+  background-color: var(--color-muted);
+  background-clip: padding-box;
+}
+
+@supports not selector(::-webkit-scrollbar) {
+  #todo-container {
+    scrollbar-width: auto;
+    scrollbar-color: var(--color-muted) transparent;
+  }
+}
+
 
 #days {
   -webkit-mask-image: linear-gradient(to right, transparent, #000 14px, #000 calc(100% - 14px), transparent);
   mask-image: linear-gradient(to right, transparent, #000 14px, #000 calc(100% - 14px), transparent);
 }
 
-/* Short, wide screens (phones in landscape, small windows): keep the app shell
-   side by side instead of stacking and scrolling the page. */
 @media (min-width: 640px) and (max-height: 600px) {
   .app-shell {
     flex-direction: row;
@@ -189,3 +187,73 @@
     min-height: 0;
   }
 }
+
+#progress.is-complete {
+  background-color: var(--color-ok);
+}
+
+.status-line{
+  transition: opacity 0.2s ease;
+}
+
+.status-line:empty {
+  opacity: 0;
+}
+
+.status-line.is-visible {
+  animation: status-pop 0.42s var(--ease-bounce) forwards;
+}
+
+@keyframes status-pop {
+  0% {
+    opacity: 0;
+    transform: translateY(6px) scale(0.96);
+  }
+  60% {
+    opacity: 1;
+    transform: translateY(-1px) scale(1.02);
+  }
+  100% {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.spark {
+  position: fixed;
+  z-index: 60;
+  width: 6px;
+  height: 6px;
+  border-radius: 9999px;
+  pointer-events: none;
+  animation: spark-fly var(--duration-spark) var(--ease-spark) forwards;
+}
+
+@keyframes spark-fly {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(.4);
+  }
+  12% {
+    opacity: 1;
+  }
+  65% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(
+      calc(-50% + var(--tx)),
+      calc(-50% + var(--ty))
+    ) scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .status-line.is-visible {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+}
+

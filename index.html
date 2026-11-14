@@ -25,13 +25,14 @@
             <div
               id="progress"
               class="bg-btn h-1.5 rounded-full"
-              style="width: 0%; transition: width 400ms var(--ease-bounce)"
+              style="width: 0%; transition: width 400ms var(--ease-bounce), background-color .45s ease"
             ></div>
           </div>
 
           <p class="font-sans font-normal text-[13px] text-muted mt-2 sm:text-[14px]">
             <span id="completed-todo-count">0</span> of <span id="total-todo-count">0</span> done
           </p>
+          <p id="status" aria-live="polite" class="status-line mt-1.5 min-h-4.5 font-sans font-medium text-[13px] text-ok sm:text-[14px]"></p>
         </div>
 
 

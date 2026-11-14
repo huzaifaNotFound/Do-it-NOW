@@ -271,7 +271,7 @@ function scheduleMidnightRefresh() {
   clearTimeout(midnightTimer);
 
   const now = new Date();
-  const nextMidnight = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
+  const nextMidnight = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1)
 
   midnightTimer = setTimeout(
     () => {

@@ -4,7 +4,7 @@ const STORAGE_KEY = "todos-by-day";
 const pad = (n) => String(n).padStart(2, "0");
 
 export const iso = (date) =>
-  date.getFullYear() + "-" + pad(date.getMonth() + 1) + "-" + pad(date.getDate());
+  date.getFullYear() + "-" + pad(date.getMonth() + 1) + "-" + pad(date.getDate())
 
 const todayKey = () => iso(new Date());
 
@@ -44,7 +44,7 @@ function saveTodos(data = todosByDay) {
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
   } catch {
-    // storage unavailable
+    //storage unavailabl
   }
 }
 
@@ -79,7 +79,7 @@ export function hasTodos(day) {
 export function addTodo(day, text) {
   if (day < todayKey()) return null;
 
-  // per-day todos
+  //per-day todos
   const todo = { id: crypto.randomUUID(), text, completed: false };
 
   todosByDay[day] = [...getTodos(day), todo];
@@ -99,7 +99,7 @@ export function toggleTodo(day, id) {
   emit("todos");
 }
 
-// edit todo
+//edit todoo
 export function editTodo(day, id, text) {
   todosByDay[day] = getTodos(day).map((todo) =>
     todo.id === id ? { ...todo, text } : todo,
@@ -109,7 +109,7 @@ export function editTodo(day, id, text) {
   emit("todos");
 }
 
-// delete todo
+//delete todo
 export function removeTodo(day, id) {
   todosByDay[day] = getTodos(day).filter((todo) => todo.id !== id);
 

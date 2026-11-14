@@ -16,8 +16,10 @@ const input = document.querySelector("#input");
 const progressBar = document.querySelector("#progress");
 const totalTodoCountSpan = document.querySelector("#total-todo-count");
 const completedTodoCountSpan = document.querySelector("#completed-todo-count");
+const statusLine = document.querySelector("#status");
+const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
 
-// enter handler
+//enter handler
 input.addEventListener("keydown", (e) => {
   if (e.key === "Enter") {
     e.preventDefault();
@@ -25,7 +27,7 @@ input.addEventListener("keydown", (e) => {
   }
 });
 
-// cards enter and click handlers
+//cards enter and click handlers
 todoContainer.addEventListener("click", (e) => {
   if (e.target.closest(".empty-action")) {
     input.focus();
@@ -63,11 +65,18 @@ todoContainer.addEventListener("keydown", (e) => {
 });
 
 function toggleTodo(todo) {
+  const wasCompleted = todo.classList.contains("is-completed")
   const completed = todo.classList.toggle("is-completed");
 
   todo.setAttribute("aria-checked", String(completed));
 
   toggleTodoInStore(getSelectedDay(), todo.dataset.id);
+
+  if(!completed){
+    resetCelebration()
+    return;
+  }
+  if(!wasCompleted && isAllDone()) celebrate()
 }
 
 // inline editing
@@ -127,10 +136,12 @@ function deleteTodo(row) {
 
   removeTodoInStore(getSelectedDay(), row.dataset.id);
 
-  if (!todoContainer.querySelector(".todo-row")) renderTodos();
+  if (!todoContainer.querySelector(".todo-row")) {
+  renderTodos();
+  resetCelebration();
+}
 }
 
-// todo row template
 function todoTemplate(todo) {
   const completedClass = todo.completed ? " is-completed" : "";
 
@@ -257,8 +268,23 @@ btn.addEventListener("click", () => {
 
   input.value = "";
 
+  resetCelebration();
   progressUpdate();
 });
+
+const PROGRESS_MESSAGES = [
+  { min: 100, text: "All done. Enjoy the peace." },
+  { min: 75, text: "Almost there, one last push." },
+  { min: 50, text: "Halfway there. Keep going." },
+  { min: 25, text: "Good start. Keep it rolling." },
+  { min: 1, text: "First one down. Momentum!" },
+];
+
+function getProgressUpdate(percentage, total){
+  if(total === 0) return "";
+  return PROGRESS_MESSAGES.find(({min})=> percentage >= min)?.text ?? "" ;
+}
+
 
 function progressUpdate() {
   const totalTodos = todoContainer.querySelectorAll(".todo-row").length;
@@ -269,11 +295,67 @@ function progressUpdate() {
   progressBar.style.width = `${percentage}%`;
   completedTodoCountSpan.textContent = completedTodos;
   totalTodoCountSpan.textContent = totalTodos;
+  statusLine.textContent = getProgressUpdate(percentage, totalTodos)
 }
 
-// store sync
+const SPARK_COUNT = 16;
+
+function isAllDone() {
+  const rows = todoContainer.querySelectorAll(".todo-row");
+  return (
+    rows.length > 0 &&
+    rows.length === todoContainer.querySelectorAll(".todo-row.is-completed").length
+  );
+}
+
+function resetCelebration() {
+  progressBar.classList.remove("is-complete");
+  statusLine.classList.remove("is-visible");
+
+  document.querySelectorAll(".spark").forEach((spark) => spark.remove());
+}
+
+function celebrate() {
+  progressBar.classList.add("is-complete");
+  statusLine.classList.add("is-visible");
+
+  if (reduceMotion.matches) return;
+
+  const rect = progressBar.getBoundingClientRect();
+  const cx = rect.left + rect.width / 2;
+  const cy = rect.top + rect.height / 2;
+
+  const colors = [
+    "var(--color-accent)",
+    "var(--color-ok)",
+    "var(--color-btn)",
+  ];
+
+  for (let i = 0; i < SPARK_COUNT; i++) {
+    const angle = (i / SPARK_COUNT) * Math.PI * 2;
+    const distance = 40 + Math.random() * 50;
+
+    const spark = document.createElement("span");
+    spark.className = "spark";
+    spark.style.left = `${cx}px`;
+    spark.style.top = `${cy}px`;
+    spark.style.backgroundColor = colors[i % colors.length];
+    spark.style.setProperty("--tx", `${Math.cos(angle) * distance}px`);
+    spark.style.setProperty("--ty", `${Math.sin(angle) * distance}px`);
+
+    document.body.appendChild(spark);
+    spark.addEventListener("animationend", () => spark.remove(), {
+      once: true,
+    });
+  }
+}
+
+//store sync
 subscribe((type) => {
-  if (type === "selected" || type === "prune") renderTodos();
+  if (type === "selected" || type === "prune") {
+    renderTodos();
+    resetCelebration()
+  }
   progressUpdate();
 });
 
