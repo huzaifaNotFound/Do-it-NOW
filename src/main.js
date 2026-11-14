@@ -98,7 +98,7 @@ function startEditing(row) {
     input.replaceWith(text);
 
     if (save && value && value !== original) {
-      editTodoInStore(getSelectedDay(), row.dataset.id, next);
+      editTodoInStore(getSelectedDay(), row.dataset.id, next)
     }
   };
 
@@ -154,7 +154,7 @@ function todoTemplate(todo) {
           />
 
         </svg>
-
+ 
       </div>
 
       <p class="task-text font-sans -ml-1 text-[15px] font-normal text-ink">${escapeHtml(todo.text)}</p>
@@ -190,13 +190,15 @@ function escapeHtml(text) {
   return node.innerHTML;
 }
 
-// render selected day
+// render selected dayy
 function renderTodos() {
   todoContainer.innerHTML = getTodos(getSelectedDay()).map(todoTemplate).join("");
 }
 
 // todo add handler
 btn.addEventListener("click", () => {
+  input.focus();
+
   const todo = input.value.trim();
 
   if (!todo) return;

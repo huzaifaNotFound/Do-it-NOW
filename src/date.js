@@ -24,12 +24,12 @@ const formatDate = (date) =>
 
 const dateElement = document.querySelector("#date");
 const headingElement = document.querySelector("#heading");
-const daysContainer = document.querySelector("#days");
+const daysContainer = document.querySelector("#days")
 
 const RANGE = 7; 
 
 let today = iso(new Date());
-let selected = getSelectedDay();
+let selected = getSelectedDay()
 
 const pendingTexts = new WeakMap();
 
@@ -48,7 +48,7 @@ function animateText(element, text) {
 
   if (currentText === text) return;
 
-  pendingTexts.set(element, text);
+  pendingTexts.set(element, text)
 
   element.getAnimations().forEach((animation) => animation.cancel());
 
@@ -158,12 +158,12 @@ function updateDateCards() {
 
     card.setAttribute("aria-pressed", String(isSelected));
 
-    card.classList.toggle("bg-btn", isSelected);
+    card.classList.toggle("bg-btn", isSelected)
 
     card.classList.toggle("border-transparent", isSelected);
     card.classList.toggle("border-muted/30", !isSelected);
 
-    card.classList.toggle("hover:-translate-y-0.5", !isSelected);
+    card.classList.toggle("hover:-translate-y-0.5", !isSelected)
     card.classList.toggle("hover:bg-chip", !isSelected);
     card.classList.toggle("hover:border-transparent", !isSelected);
 
@@ -177,14 +177,14 @@ function updateDateCards() {
     dayNumber.classList.toggle("text-muted", !isSelected);
     dayNumber.classList.toggle("group-hover:text-ink", !isSelected);
 
-    card.querySelector(".task-dot").classList.toggle("hidden", card.dataset.day !== today);
+    card.querySelector(".task-dot").classList.toggle("hidden", card.dataset.day !== today)
   });
-  updateBackButton();
+  updateBackButton()
 }
 
 function updateBackButton() {
   if (!back2Today) return;
-  back2Today.classList.toggle("hidden", selected === today);
+  back2Today.classList.toggle("hidden", selected === today)
 }
 
 back2Today?.addEventListener("click", () => {
@@ -197,7 +197,7 @@ back2Today?.addEventListener("click", () => {
 });
 
 const css = (name, fallback) => {
-  const value = parseFloat(getComputedStyle(document.documentElement).getPropertyValue(name));
+  const value = parseFloat(getComputedStyle(document.documentElement).getPropertyValue(name))
   return Number.isFinite(value) && value > 0 ? value : fallback;
 };
 
