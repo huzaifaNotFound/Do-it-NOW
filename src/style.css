@@ -265,3 +265,10 @@
 }
 
 
+#todo-container.is-readonly .todo-row {
+  cursor: default;
+}
+
+#todo-container.is-readonly .todo-actions {
+  display: none;
+}

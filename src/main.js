@@ -19,6 +19,18 @@ const completedTodoCountSpan = document.querySelector("#completed-todo-count");
 const statusLine = document.querySelector("#status");
 const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
 
+// past days are read-only
+const isPastDay = () => getSelectedDay() < iso(new Date());
+
+function updateComposer() {
+  const locked = isPastDay();
+
+  input.disabled = locked;
+  btn.disabled = locked;
+  input.placeholder = locked ? "Past days are read-only" : "Write a task...";
+  todoContainer.classList.toggle("is-readonly", locked);
+}
+
 //enter handler
 input.addEventListener("keydown", (e) => {
   if (e.key === "Enter") {
@@ -37,6 +49,7 @@ todoContainer.addEventListener("click", (e) => {
   const todo = e.target.closest(".todo-row");
 
   if (!todo || !todoContainer.contains(todo)) return;
+  if (isPastDay()) return;
 
   if (e.target.closest(".todo-input, .todo-actions")) {
     const editButton = e.target.closest(".todo-edit");
@@ -55,6 +68,7 @@ todoContainer.addEventListener("keydown", (e) => {
   const todo = e.target.closest(".todo-row");
 
   if (!todo || !todoContainer.contains(todo)) return;
+  if (isPastDay()) return;
 
   if (e.target.closest(".todo-input, .todo-actions")) return;
 
@@ -65,18 +79,18 @@ todoContainer.addEventListener("keydown", (e) => {
 });
 
 function toggleTodo(todo) {
-  const wasCompleted = todo.classList.contains("is-completed")
+  const wasCompleted = todo.classList.contains("is-completed");
   const completed = todo.classList.toggle("is-completed");
 
   todo.setAttribute("aria-checked", String(completed));
 
   toggleTodoInStore(getSelectedDay(), todo.dataset.id);
 
-  if(!completed){
-    resetCelebration()
+  if (!completed) {
+    resetCelebration();
     return;
   }
-  if(!wasCompleted && isAllDone()) celebrate()
+  if (!wasCompleted && isAllDone()) celebrate();
 }
 
 // inline editing
@@ -113,7 +127,7 @@ function startEditing(row) {
     input.replaceWith(text);
 
     if (save && value && value !== original) {
-      editTodoInStore(getSelectedDay(), row.dataset.id, next)
+      editTodoInStore(getSelectedDay(), row.dataset.id, next);
     }
   };
 
@@ -137,9 +151,9 @@ function deleteTodo(row) {
   removeTodoInStore(getSelectedDay(), row.dataset.id);
 
   if (!todoContainer.querySelector(".todo-row")) {
-  renderTodos();
-  resetCelebration();
-}
+    renderTodos();
+    resetCelebration();
+  }
 }
 
 function todoTemplate(todo) {
@@ -204,7 +218,7 @@ function todoTemplate(todo) {
 
 // empty state template
 function emptyTemplate() {
-  if (getSelectedDay() < iso(new Date())) {
+  if (isPastDay()) {
     return `
       <div class="empty-state animate-enter flex w-full flex-col items-center justify-center px-6 text-center">
         <div class="flex h-12 w-12 items-center justify-center rounded-full bg-chip/70 text-muted">
@@ -240,7 +254,7 @@ function escapeHtml(text) {
   return node.innerHTML;
 }
 
-// render selected dayy
+// render selected day
 function renderTodos() {
   const todos = getTodos(getSelectedDay());
 
@@ -250,6 +264,8 @@ function renderTodos() {
 
 // todo add handler
 btn.addEventListener("click", () => {
+  if (isPastDay()) return;
+
   input.focus();
 
   const todo = input.value.trim();
@@ -265,11 +281,11 @@ btn.addEventListener("click", () => {
   todoContainer.querySelector(".empty-state")?.remove();
 
   todoContainer.insertAdjacentHTML("beforeend", todoTemplate(added));
-  
+
   todoContainer.scrollTo({
-  top: todoContainer.scrollHeight,
-  behavior: reduceMotion.matches ? "auto" : "smooth",
-});
+    top: todoContainer.scrollHeight,
+    behavior: reduceMotion.matches ? "auto" : "smooth",
+  });
 
   input.value = "";
 
@@ -285,11 +301,10 @@ const PROGRESS_MESSAGES = [
   { min: 1, text: "First one down. Momentum!" },
 ];
 
-function getProgressUpdate(percentage, total){
-  if(total === 0) return "";
-  return PROGRESS_MESSAGES.find(({min})=> percentage >= min)?.text ?? "" ;
+function getProgressUpdate(percentage, total) {
+  if (total === 0) return "";
+  return PROGRESS_MESSAGES.find(({ min }) => percentage >= min)?.text ?? "";
 }
-
 
 function progressUpdate() {
   const totalTodos = todoContainer.querySelectorAll(".todo-row").length;
@@ -300,7 +315,7 @@ function progressUpdate() {
   progressBar.style.width = `${percentage}%`;
   completedTodoCountSpan.textContent = completedTodos;
   totalTodoCountSpan.textContent = totalTodos;
-  statusLine.textContent = getProgressUpdate(percentage, totalTodos)
+  statusLine.textContent = getProgressUpdate(percentage, totalTodos);
 }
 
 const SPARK_COUNT = 16;
@@ -358,11 +373,13 @@ function celebrate() {
 //store sync
 subscribe((type) => {
   if (type === "selected" || type === "prune") {
+    updateComposer();
     renderTodos();
-    resetCelebration()
+    resetCelebration();
   }
   progressUpdate();
 });
 
+updateComposer();
 renderTodos();
 progressUpdate();

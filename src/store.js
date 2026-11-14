@@ -1,12 +1,22 @@
 // day-keyed storage
 const STORAGE_KEY = "todos-by-day";
 
+export const HISTORY_DAYS = 7;
+
 const pad = (n) => String(n).padStart(2, "0");
 
 export const iso = (date) =>
-  date.getFullYear() + "-" + pad(date.getMonth() + 1) + "-" + pad(date.getDate())
+  date.getFullYear() + "-" + pad(date.getMonth() + 1) + "-" + pad(date.getDate());
 
 const todayKey = () => iso(new Date());
+
+const cutoffKey = () => {
+  const d = new Date();
+  d.setDate(d.getDate() - HISTORY_DAYS);
+  return iso(d);
+};
+
+const isPast = (day) => day < todayKey();
 
 const listeners = new Set();
 
@@ -24,12 +34,11 @@ function loadTodos() {
 
   if (typeof data !== "object" || Array.isArray(data)) data = {};
 
-  // prune old days
-  const today = todayKey();
+  const cutoff = cutoffKey();
   let changed = false;
 
   Object.keys(data).forEach((day) => {
-    if (!Array.isArray(data[day]) || day < today) {
+    if (!Array.isArray(data[day]) || day < cutoff) {
       delete data[day];
       changed = true;
     }
@@ -44,7 +53,6 @@ function saveTodos(data = todosByDay) {
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
   } catch {
-    //storage unavailabl
   }
 }
 
@@ -77,9 +85,9 @@ export function hasTodos(day) {
 }
 
 export function addTodo(day, text) {
-  if (day < todayKey()) return null;
+  if (isPast(day)) return null;
 
-  //per-day todos
+  // per-day todos
   const todo = { id: crypto.randomUUID(), text, completed: false };
 
   todosByDay[day] = [...getTodos(day), todo];
@@ -91,6 +99,8 @@ export function addTodo(day, text) {
 }
 
 export function toggleTodo(day, id) {
+  if (isPast(day)) return;
+
   todosByDay[day] = getTodos(day).map((todo) =>
     todo.id === id ? { ...todo, completed: !todo.completed } : todo,
   );
@@ -99,8 +109,10 @@ export function toggleTodo(day, id) {
   emit("todos");
 }
 
-//edit todoo
+// edit todo
 export function editTodo(day, id, text) {
+  if (isPast(day)) return;
+
   todosByDay[day] = getTodos(day).map((todo) =>
     todo.id === id ? { ...todo, text } : todo,
   );
@@ -111,6 +123,8 @@ export function editTodo(day, id, text) {
 
 //delete todo
 export function removeTodo(day, id) {
+  if (isPast(day)) return;
+
   todosByDay[day] = getTodos(day).filter((todo) => todo.id !== id);
 
   saveTodos();
@@ -118,11 +132,11 @@ export function removeTodo(day, id) {
 }
 
 export function pruneOldTodos() {
-  const today = todayKey();
+  const cutoff = cutoffKey();
   let changed = false;
 
   Object.keys(todosByDay).forEach((day) => {
-    if (day < today) {
+    if (day < cutoff) {
       delete todosByDay[day];
       changed = true;
     }

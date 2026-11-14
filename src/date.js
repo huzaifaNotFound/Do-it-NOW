@@ -1,6 +1,7 @@
 import "./style.css";
 import {
   getSelectedDay,
+  HISTORY_DAYS,
   pruneOldTodos,
   setSelectedDay,
 } from "./store.js";
@@ -26,7 +27,7 @@ const dateElement = document.querySelector("#date");
 const headingElement = document.querySelector("#heading");
 const daysContainer = document.querySelector("#days")
 
-const RANGE = 7; 
+const RANGE = HISTORY_DAYS;
 
 let today = iso(new Date());
 let selected = getSelectedDay()
