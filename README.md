@@ -82,4 +82,4 @@ AI was used during the production mainly for debugging. Other than that it was u
 
 ## Author
 
-Made by [Your Name](https://your-site.com).
+Made by M. Huzaifa
