@@ -29,7 +29,7 @@ A small daily todo app. Pick a day, write a few tasks, tick them off. It runs en
 You need Node 20 or newer.
 
 ```bash
-git clone https://github.com/your-username/your-repo.git
+git clone https://github.com/huzaifaNotFound/Do-It-NOW
 cd your-repo
 npm install
 npm run dev
@@ -79,9 +79,6 @@ On load, and again at midnight or when the tab becomes visible, any day older th
 
 AI was used during the production mainly for debugging. Other than that it was used for color palette and animations.
 
-## License
-
-Released under the [MIT License](./LICENSE).
 
 ## Author
 
