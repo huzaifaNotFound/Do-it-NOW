@@ -103,7 +103,7 @@ function startEditing(row) {
   const input = document.createElement("input");
   input.type = "text";
   input.value = original;
-  input.maxLength = 20;
+  input.maxLength = 27;
   input.className =
     "todo-input flex-1 min-w-0 -ml-1 bg-transparent font-sans text-[15px] font-normal text-ink outline-none border-b border-accent";
   input.setAttribute("aria-label", "Edit todo");
