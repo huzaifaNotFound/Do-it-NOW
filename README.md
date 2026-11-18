@@ -24,27 +24,6 @@ A small daily todo app. Pick a day, write a few tasks, tick them off. It runs en
 - Small celebration when everything for the day is done (disabled if you prefer reduced motion)
 - Works on phones, tablets and desktop
 
-## Getting started
-
-You need Node 20 or newer.
-
-```bash
-git clone https://github.com/huzaifaNotFound/Do-It-NOW
-cd your-repo
-npm install
-npm run dev
-```
-
-Then open the address Vite prints, usually `http://localhost:5173`.
-
-To build for production and preview the result:
-
-```bash
-npm run build
-npm run preview
-```
-
-The output goes to `dist/` and can be hosted on any static host.
 
 ## How it works
 
@@ -69,11 +48,6 @@ On load, and again at midnight or when the tab becomes visible, any day older th
 | --- | --- | --- | --- |
 | `HISTORY_DAYS` | `src/store.js` | `7` | How many past days are kept and shown |
 | Colours and fonts | `@theme` in `src/style.css` | see file | Palette and typography |
-
-## Known limitations
-
-- Data lives in one browser on one device. Clearing site data removes it.
-- Two tabs open at once can overwrite each other's changes.
 
 ## AI USAGE
 
